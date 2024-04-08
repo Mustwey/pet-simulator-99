@@ -1,5 +1,5 @@
 local function alternateServersRequest()
-    local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=300', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
+    local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
 
     if response.Success then
         return response.Body
@@ -12,7 +12,7 @@ local function getServer()
     local servers
 
     local success, _ = pcall(function()
-        servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=300')).data
+        servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100')).data
     end)
 
     if not success then
@@ -21,7 +21,7 @@ local function getServer()
     end
 
     local randomServer
-    randomServer = servers[Random.new():NextInteger(100, 300)]
+    randomServer = servers[Random.new():NextInteger(5, 100)]
 
     if randomServer then
         return randomServer
