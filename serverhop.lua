@@ -37,5 +37,5 @@ end)
 task.wait(5)
 while true do
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-    task.wait()
+    task.wait(5)
 end
