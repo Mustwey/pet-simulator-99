@@ -12,11 +12,7 @@ end
 
 -- Alternate request method preserved for backup.
 local function alternateServersRequest()
-    local response = HttpService:RequestAsync({
-        Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=100',
-        Method = "GET",
-        Headers = { ["Content-Type"] = "application/json" },
-    })
+local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=250', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
 
     if response.Success then
         return response.Body -- Directly return the response body.
