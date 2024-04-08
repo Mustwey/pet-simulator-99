@@ -22,7 +22,7 @@ local function getServer()
 
     local randomServer
     repeat
-        randomServer = servers[Random.new():NextInteger(5, 100)]
+        randomServer = servers[Random.new():NextInteger(5, 1000)]
     until randomServer and randomServer.playing <= 5
 
     if randomServer then
