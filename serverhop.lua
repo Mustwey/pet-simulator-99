@@ -2,6 +2,14 @@ local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
+-- Function to shuffle the servers array to simulate random selection
+local function shuffleTable(t)
+    for i = #t, 2, -1 do
+        local j = math.random(i)
+        t[i], t[j] = t[j], t[i]
+    end
+end
+
 -- Alternate request method preserved for backup.
 local function alternateServersRequest()
     local response = HttpService:RequestAsync({
@@ -11,7 +19,7 @@ local function alternateServersRequest()
     })
 
     if response.Success then
-        return response.Body -- Directly return the response body for consistency with your original approach.
+        return response.Body -- Directly return the response body.
     else
         return nil
     end
@@ -31,15 +39,12 @@ local function getServer()
         servers = HttpService:JSONDecode(alternateServersRequest()).data
     end
 
-    -- Ensure there are servers to choose from.
+    -- Ensure there are servers to choose from and shuffle to simulate random selection.
     if #servers > 0 then
-        local randomIndex = Random.new():NextInteger(5, math.min(100, #servers)) -- Ensures selection within available range.
-        local server = servers[randomIndex]
-        if server then
-            return server
-        else
-            return getServer() -- Recursive call to handle edge cases.
-        end
+        shuffleTable(servers) -- Shuffle the list of servers.
+        table.sort(servers, function(a, b) return a.playing < b.playing end) -- Sort the first 10 for the least populated.
+        local server = servers[1] -- Select the least populated server.
+        return server
     else
         warn("No servers available.")
         return nil
@@ -61,8 +66,8 @@ end
 -- Initial teleport attempt.
 attemptTeleport()
 
+-- Continuous attempt loop, with a wait to prevent rapid requests.
 while true do
     task.wait(5) -- Adjusted to a reasonable interval to avoid excessive teleportation attempts.
     attemptTeleport()
-
 end
