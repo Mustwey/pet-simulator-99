@@ -21,7 +21,7 @@ local function getServer()
     end
 
     local randomServer
-    randomServer = servers[Random.new():NextInteger(5, 100)]
+    randomServer = servers[Random.new():NextInteger(5, 60)]
 
     if randomServer then
         return randomServer
