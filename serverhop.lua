@@ -20,13 +20,11 @@ local function getServer()
         servers = game.HttpService:JSONDecode(alternateServersRequest()).data
     end
 
-    local randomServer
-    randomServer = servers[Random.new():NextInteger(100, 150)]
-
-    if randomServer then
-        return randomServer
+    local server = servers[Random.new():NextInteger(50, 150)]
+    if server then
+        return server
     else
-        return getServer() -- Retry if no suitable server found
+        return getServer()
     end
 end
 
@@ -37,5 +35,5 @@ end)
 task.wait(5)
 while true do
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-    task.wait(5)
+    task.wait()
 end
