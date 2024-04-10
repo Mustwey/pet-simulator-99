@@ -52,9 +52,9 @@ while (a>6) do
     end
     a += 1
     task.wait(4) -- Use task.wait() if available, for better performance and reliability
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
 end
 
 while true do
-    game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
-    task.wait()
+
 end
