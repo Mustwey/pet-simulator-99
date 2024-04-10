@@ -52,5 +52,6 @@ while (a>6) do
     end
     a += 1
     task.wait(4) -- Use task.wait() if available, for better performance and reliability
+    TeleportService:Teleport(PlaceId, Players.LocalPlayer)
 end
 
