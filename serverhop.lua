@@ -1,3 +1,4 @@
+local a = 1
 local function alternateServersRequest()
     local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
 
@@ -40,7 +41,7 @@ local function getServer(retryLimit)
     end
 end
 
-while true do
+while (a>6) do
     local server = getServer(5) -- Attempt to get a suitable server 10 times
     if server and server.id then
         pcall(function()
@@ -49,6 +50,7 @@ while true do
     else
         warn("Unable to find a suitable server. Waiting before retrying...")
     end
+    a += 1
     task.wait(4) -- Use task.wait() if available, for better performance and reliability
 end
 
