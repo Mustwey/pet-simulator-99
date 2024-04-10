@@ -41,7 +41,7 @@ local function getServer(retryLimit)
     end
 end
 
-local server = getServer(1) -- Attempt to get a suitable server 10 times
+local server = getServer(10) -- Attempt to get a suitable server 10 times
 print(server)
 pcall(function()
     game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
