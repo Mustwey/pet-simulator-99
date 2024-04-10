@@ -12,20 +12,19 @@ end
 local function getServer(retryLimit)
     local servers
     local retryCount = 0
-    local success, result = pcall(function()
+    local success = pcall(function()
         servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100')).data
     end)
 
-    if not success or not servers then
+    if not success then
         print("Error getting servers, using backup method")
-        local backupResult = alternateServersRequest()
-        servers = backupResult and game.HttpService:JSONDecode(alternateServersRequest()).data or nil
+        servers = game.HttpService:JSONDecode(alternateServersRequest()).data or nil
     end
 
     -- Ensure servers is not nil and has items
     if servers and #servers > 0 then
         while retryCount < retryLimit do
-            local randomIndex = math.random(1, #servers)
+            local randomIndex = math.random(50, #servers)
             local server = servers[randomIndex]
             if server and server.playing < server.maxPlayers then
                 return server
@@ -41,15 +40,12 @@ local function getServer(retryLimit)
     end
 end
 
--- Continuous attempt to join a suitable server
+pcall(function()
+    TeleportService:TeleportToPlaceInstance(game.PlaceId, getServer(1).id, Players.LocalPlayer)
+end)
+task.wait(5) -- Use task.wait() if available, for better performance and reliability
+
 while true do
-    local server = getServer(10) -- Attempt to get a suitable server 10 times
-    if server and server.id then
-        pcall(function()
-            TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
-        end)
-    else
-        warn("Unable to find a suitable server. Waiting before retrying...")
-    end
-    task.wait(5) -- Use task.wait() if available, for better performance and reliability
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    task.wait()
 end
