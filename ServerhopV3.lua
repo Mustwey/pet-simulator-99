@@ -42,7 +42,7 @@ local function getServer(retryLimit)
 end
 
 while true do
-    local server = getServer(5) -- Attempt to get a server 5 times
+    local server = getServer(10) -- Attempt to get a server 5 times
     if server and server.id then
         pcall(function()
             game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, server.id, game.Players.LocalPlayer)
