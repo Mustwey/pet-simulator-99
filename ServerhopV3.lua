@@ -51,5 +51,5 @@ while true do
     else
         warn("Unable to find a suitable server. Waiting before retrying...")
     end
-    wait(2.5) -- Use task.wait() if available, for better performance and reliability
+    task.wait(5) -- Use task.wait() if available, for better performance and reliability
 end
