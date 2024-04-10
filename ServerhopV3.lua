@@ -13,13 +13,13 @@ local function getServer(retryLimit)
     local servers
     local retryCount = 0
     local success, result = pcall(function()
-        servers = HttpService:JSONDecode(HttpService:GetAsync('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100')).data
+        servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100')).data
     end)
 
     if not success or not servers then
         print("Error getting servers, using backup method")
         local backupResult = alternateServersRequest()
-        servers = backupResult and HttpService:JSONDecode(backupResult).data or nil
+        servers = backupResult and game.HttpService:JSONDecode(alternateServersRequest()).data or nil
     end
 
     -- Ensure servers is not nil and has items
