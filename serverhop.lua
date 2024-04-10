@@ -40,10 +40,17 @@ local function getServer(retryLimit)
     end
 end
 
-pcall(function()
-    TeleportService:TeleportToPlaceInstance(game.PlaceId, getServer(1).id, Players.LocalPlayer)
-end)
-task.wait(5) -- Use task.wait() if available, for better performance and reliability
+while true do
+    local server = getServer(5) -- Attempt to get a suitable server 10 times
+    if server and server.id then
+        pcall(function()
+            TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
+        end)
+    else
+        warn("Unable to find a suitable server. Waiting before retrying...")
+    end
+    task.wait(4) -- Use task.wait() if available, for better performance and reliability
+end
 
 while true do
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
