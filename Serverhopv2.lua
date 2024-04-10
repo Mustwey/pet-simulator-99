@@ -1,4 +1,3 @@
-local a = 1
 local function alternateServersRequest()
     local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
 
