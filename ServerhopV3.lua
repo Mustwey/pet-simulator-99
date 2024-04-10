@@ -45,13 +45,12 @@ while (a>6) do
     local server = getServer(5) -- Attempt to get a suitable server 10 times
     if server and server.id then
         pcall(function()
-            TeleportService:TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
+            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, server.id, Players.LocalPlayer)
         end)
     else
         warn("Unable to find a suitable server. Waiting before retrying...")
     end
     a += 1
     task.wait(4) -- Use task.wait() if available, for better performance and reliability
-    game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
 end
 
