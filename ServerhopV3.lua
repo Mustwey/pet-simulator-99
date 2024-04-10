@@ -55,6 +55,3 @@ while (a>6) do
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
 end
 
-while true do
-
-end
