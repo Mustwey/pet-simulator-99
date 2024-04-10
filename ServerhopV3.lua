@@ -20,7 +20,7 @@ local function getServer()
         servers = game.HttpService:JSONDecode(alternateServersRequest()).data
     end
 
-    local server = servers[Random.new():NextInteger(70, #servers)]
+    local server = servers[Random.new():NextInteger(1, #servers)]
     return server
 end
 
