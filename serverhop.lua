@@ -21,11 +21,7 @@ local function getServer()
     end
 
     local server = servers[Random.new():NextInteger(1, #servers)]
-    if server and server.playing < server.maxPlayers then
-        return server
-    else
-        return getServer()
-    end
+    return server
 end
 
 pcall(function()
