@@ -1,5 +1,5 @@
 queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/autoBalloon.lua"))
-task.wait(0.5)
+task.wait(1)
 local function alternateServersRequest()
     local response = request({Url = 'https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Desc&limit=100', Method = "GET", Headers = { ["Content-Type"] = "application/json" },})
 
@@ -30,7 +30,7 @@ pcall(function()
     game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, game.Players.LocalPlayer)
 end)
 
-task.wait(0.5)
+task.wait(1)
 while true do
     game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
     task.wait()
