@@ -1,9 +1,29 @@
--- MADE FIREDEVIL DO NOT SKID
-print("Made By firedevil (Ryan | 404678244215029762 | https://discord.gg/ettP4TjbAb)")
+getgenv().autoBalloon = true
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/waitForGameLoad.lua"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/antiStaff.lua"))()
+getgenv().autoBalloonConfig = {
+    SERVER_MINIMUM_TIME = 30, -- minimum time to wait before server hopping
+    START_DELAY = 1, -- delay before starting
+    SERVER_HOP_AFTER_NOT_FIND = false, -- if the balloon isn't found, instead of checking through the rest of the balloons, it will just server hop
+    SERVER_HOP_DELAY = 0, -- delay before server hopping
+    BALLOON_DELAY = 0.45, -- delay before popping next balloon (if there are multiple balloons in the server)
+    GET_BALLOON_DELAY = 0.2, -- delay before getting balloons again if none are detected
+    GIFT_BOX_BREAK_FAILSAFE = 1, -- seconds to wait before skipping gift boxes if they don't function properly
+}
 
+repeat
+    task.wait(0.1)
+until game:IsLoaded() and game.PlaceId ~= nil and
+    game:GetService("Players").LocalPlayer and
+    game:GetService("Players").LocalPlayer.Character and
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart and
+    (
+        (game.PlaceId == 8737899170 and #game:GetService("Workspace").Map:GetChildren() == 100) or
+        (game.PlaceId == 16498369169 and #game:GetService("Workspace").Map2:GetChildren() == 51) or
+        (game.PlaceId ~= 8737899170 and game.PlaceId ~= 16498369169)
+    ) and
+    game:GetService("Workspace").__THINGS and game:GetService("Workspace").__DEBRIS
+
+print("[CLIENT] Loaded Game")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local LocalPlayer = game:GetService("Players").LocalPlayer
@@ -20,7 +40,7 @@ pcall(function()
     else
         LocalPlayer.Idled:Connect(function()
             game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-            task.wait(1)
+            task.wait(2)
             game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         end)
     end
@@ -146,7 +166,7 @@ while getgenv().autoBalloon do
                         if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
                             task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
                         end
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
                     end
                     break
                 end
@@ -191,15 +211,15 @@ while getgenv().autoBalloon do
             if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
                 task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
             end
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
         end
 
+        task.wait()
         LocalPlayer.Character.HumanoidRootPart.Anchored = false
         LocalPlayer.Character.HumanoidRootPart.CFrame = originalPosition
     end
 
     if (os.time() - startTimestamp) > getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
     end
 end
--- MADE FIREDEVIL DO NOT SKID
