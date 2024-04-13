@@ -7,7 +7,7 @@ getgenv().autoBalloonConfig = {
     SERVER_HOP_DELAY = 0, -- delay before server hopping
     BALLOON_DELAY = 0.45, -- delay before popping next balloon (if there are multiple balloons in the server)
     GET_BALLOON_DELAY = 0.2, -- delay before getting balloons again if none are detected
-    GIFT_BOX_BREAK_FAILSAFE = 2, -- seconds to wait before skipping gift boxes if they don't function properly
+    GIFT_BOX_BREAK_FAILSAFE = 1.5, -- seconds to wait before skipping gift boxes if they don't function properly
 }
 
 repeat
@@ -40,7 +40,7 @@ pcall(function()
     else
         LocalPlayer.Idled:Connect(function()
             game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-            task.wait(2)
+            task.wait(1)
             game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
         end)
     end
