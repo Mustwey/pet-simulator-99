@@ -1,7 +1,7 @@
 getgenv().autoBalloon = true
 
 getgenv().autoBalloonConfig = {
-    SERVER_MINIMUM_TIME = 20, -- minimum time to wait before server hopping
+    SERVER_MINIMUM_TIME = 30, -- minimum time to wait before server hopping
     START_DELAY = 1.5, -- delay before starting
     SERVER_HOP_AFTER_NOT_FIND = false, -- if the balloon isn't found, instead of checking through the rest of the balloons, it will just server hop
     SERVER_HOP_DELAY = 0, -- delay before server hopping
