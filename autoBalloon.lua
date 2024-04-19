@@ -166,7 +166,7 @@ while getgenv().autoBalloon do
                         if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
                             task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
                         end
-                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
+                        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/presonal/ServerHopV4.lua"))()
                     end
                     break
                 end
@@ -211,7 +211,7 @@ while getgenv().autoBalloon do
             if timeElapsed < getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
                 task.wait(getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME - timeElapsed)
             end
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/presonal/ServerHopV4.lua"))()
         end
 
         task.wait()
@@ -220,6 +220,6 @@ while getgenv().autoBalloon do
     end
 
     if (os.time() - startTimestamp) > getgenv().autoBalloonConfig.SERVER_MINIMUM_TIME then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/ServerhopV3.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/presonal/ServerHopV4.lua"))()
     end
 end
