@@ -81,10 +81,10 @@ print("Arrived from teleport:", hasArrivedFromTeleport)
 -- Decision based on teleport arrival
 if hasArrivedFromTeleport then
     BlockUtils:UnblockUser()
-    wait(5)
+    wait(1)
 else
     BlockUtils:BlockRandomUser()
-    wait(5)
+    wait(1)
 end
 
 -- Constantly attempt to teleport to a random place
