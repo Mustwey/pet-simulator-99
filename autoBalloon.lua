@@ -94,7 +94,7 @@ breakables.ChildRemoved:Connect(function(child)
     end)
 end)
 
-
+ReplicatedStorage.Network.Slingshot_Toggle:InvokeServer()
 while getgenv().autoBalloon do
     local balloonIds = {}
 
@@ -121,18 +121,15 @@ while getgenv().autoBalloon do
         end
 
         local originalPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
-
         LocalPlayer.Character.HumanoidRootPart.Anchored = true
         for balloonId, balloonData in pairs(balloonIds) do
             local balloonPosition = balloonData.Position
             LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(balloonPosition.X, balloonPosition.Y + 30, balloonPosition.Z)
-            ReplicatedStorage.Network.Slingshot_Toggle:InvokeServer()
             task.wait()
             ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(Vector3.new(balloonPosition.X, balloonPosition.Y + 25, balloonPosition.Z), 0.5794160315249014, -0.8331117721691044, 200)
             task.wait()
             ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
             task.wait()
-            ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
 
             -- BREAK BREAKABLES
             print("Breaking balloon boxes")
