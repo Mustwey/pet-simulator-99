@@ -102,7 +102,7 @@ task.spawn(function()
         if not state or not state.isEquipped then
             env.equipWeapon(game.Players.LocalPlayer)
         end
-        wait(0.1)
+        wait(0.5)
     end
 end)
 
