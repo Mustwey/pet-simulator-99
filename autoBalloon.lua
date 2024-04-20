@@ -94,7 +94,18 @@ breakables.ChildRemoved:Connect(function(child)
     end)
 end)
 
-ReplicatedStorage.Network.Slingshot_Toggle:InvokeServer()
+local env = getsenv(game:GetService("Players").LocalPlayer.PlayerScripts.Scripts.Game.Misc.Slingshot)
+
+task.spawn(function()
+    while true do
+        local state = env.getWeaponState(game.Players.LocalPlayer)
+        if not state or not state.isEquipped then
+            env.equipWeapon(game.Players.LocalPlayer)
+        end
+        wait(0.1)
+    end
+end)
+
 while getgenv().autoBalloon do
     local balloonIds = {}
 
