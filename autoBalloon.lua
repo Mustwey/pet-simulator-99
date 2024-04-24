@@ -120,36 +120,48 @@ while getgenv().autoBalloon do
     end
 
     local notContinuing = true
-    if allPopped then
-        print("No balloons detected, waiting " .. tostring(getgenv().autoBalloonConfig.GET_BALLOON_DELAY) .. " seconds")
-        task.wait(getgenv().autoBalloonConfig.GET_BALLOON_DELAY)
-        notContinuing = false
+while getgenv().autoBalloon do
+    local balloonIds = {}
+    local getActiveBalloons = ReplicatedStorage.Network.BalloonGifts_GetActiveBalloons:InvokeServer()
+
+    local allPopped = true
+    for i, v in pairs(getActiveBalloons) do
+        if not v.Popped then
+            allPopped = false
+            balloonIds[i] = v
+        end
     end
 
-    if notContinuing then
-        if not getgenv().autoBalloon then
-            break
-        end
-
+    if not allPopped then
         local originalPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
         LocalPlayer.Character.HumanoidRootPart.Anchored = true
-        for balloonId, balloonData in pairs(balloonIds) do
-        for balloonId, balloonData in pairs(balloonIds) do
-            -- Adjust these values to change the angle of approach
-            local offsetAngle = math.rad(45)  -- Angle from the vertical, 45 degrees for example
-            local heightOffset = 30           -- Height above the balloon to position
-            local distanceFromBalloon = 10    -- Horizontal distance from the balloon
 
-            -- Calculate new position from balloon
+        for balloonId, balloonData in pairs(balloonIds) do
             local balloonPosition = balloonData.Position
-            local anglePosition = CFrame.new(balloonPosition) * CFrame.Angles(0, offsetAngle, 0) * CFrame.new(0, heightOffset, -distanceFromBalloon)
+            -- Adjusting position for angled popping
+            local offsetDistance = 10  -- Horizontal offset
+            local angleHeight = 20     -- Height above the balloon
+
+            -- Calculate new CFrame from an angle
+            local anglePosition = CFrame.new(
+                balloonPosition.X + offsetDistance,
+                balloonPosition.Y + angleHeight,
+                balloonPosition.Z
+            )
 
             LocalPlayer.Character.HumanoidRootPart.CFrame = anglePosition
-            task.wait()
-            ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(balloonPosition, 0.5794160315249014, -0.8331117721691044, 200)
+            task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
+
+            -- Adjust firing direction to point at the balloon from the new angle
+            ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(
+                balloonPosition,
+                0.5794160315249014,  -- These parameters may need adjustment for precise aiming
+                -0.8331117721691044,
+                200
+            )
             task.wait()
             ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
-            task.wait()
+            task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
 
             -- BREAK BREAKABLES
             print("Breaking balloon boxes")
