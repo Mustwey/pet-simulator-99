@@ -134,10 +134,19 @@ while getgenv().autoBalloon do
         local originalPosition = LocalPlayer.Character.HumanoidRootPart.CFrame
         LocalPlayer.Character.HumanoidRootPart.Anchored = true
         for balloonId, balloonData in pairs(balloonIds) do
+        for balloonId, balloonData in pairs(balloonIds) do
+            -- Adjust these values to change the angle of approach
+            local offsetAngle = math.rad(45)  -- Angle from the vertical, 45 degrees for example
+            local heightOffset = 30           -- Height above the balloon to position
+            local distanceFromBalloon = 10    -- Horizontal distance from the balloon
+
+            -- Calculate new position from balloon
             local balloonPosition = balloonData.Position
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(balloonPosition.X, balloonPosition.Y + 30, balloonPosition.Z)
+            local anglePosition = CFrame.new(balloonPosition) * CFrame.Angles(0, offsetAngle, 0) * CFrame.new(0, heightOffset, -distanceFromBalloon)
+
+            LocalPlayer.Character.HumanoidRootPart.CFrame = anglePosition
             task.wait()
-            ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(Vector3.new(balloonPosition.X, balloonPosition.Y + 25, balloonPosition.Z), 0.5794160315249014, -0.8331117721691044, 200)
+            ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(balloonPosition, 0.5794160315249014, -0.8331117721691044, 200)
             task.wait()
             ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
             task.wait()
