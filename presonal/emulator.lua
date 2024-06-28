@@ -100,6 +100,6 @@ for _, player in PlayersService:GetPlayers() do
         end
         task.wait(0.025)
     end
-    wait(1)
+    wait(5)
     UseTerminal()
 end
