@@ -1,5 +1,5 @@
 repeat 
-    task.wait(1) 
+    task.wait(0.1) 
 until game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") and not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO") and game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character
 --UI Lib
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/' --das ist das ui
@@ -98,8 +98,8 @@ for _, player in PlayersService:GetPlayers() do
                 end
             end
         end
-        task.wait(0.025)
+        task.wait(0.001)
     end
-    wait(5)
+    wait(0.5)
     UseTerminal()
 end
