@@ -1,157 +1,105 @@
-getgenv().autoDigsite = true
+repeat 
+    task.wait(1) 
+until game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") and not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO") and game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character
 
-getgenv().autoDigsiteConfig = {
-    NO_CHEST_SERVER_HOP = 20, -- Server hop if no chest is found for this many seconds
-    SERVER_HOP_DELAY = 5, -- Delay before server hops
-    NOT_LOADED_SERVER_HOP_DELAY = 10 -- If the digsite is not loaded, server hop after this many seconds, used to help prevent the "You cannot enter this instance right now" error
+--UI Lib
+local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/' --das ist das ui
+local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
+local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
+local SaveManager = loadstring(game:HttpGet(repo .. 'addons/SaveManager.lua'))()
+
+local PlayersService = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local localPlayer = PlayersService.LocalPlayer
+
+--Webhook Stuff
+local YourWebhook = "https://discord.com/api/webhooks/1232716551606632529/nNGM2QIu1wZlHgmEL-dlJeI-HTKRlGhmrofILo-rmUtJbOPCiBCbUYG6mAaknaMgohZN"
+local webhookBuilder = loadstring(game:HttpGet("https://raw.githubusercontent.com/lilyscripts/webhook-builder/main/webhookBuilder.lua"))()
+
+wait(0.5)
+
+local function UseTerminal()
+    for i, v in getgenv().Config.ItemsToBuy do
+        local args = {
+            [1] = v.Class,
+            [2] = "{\"id\":\"" .. v.ItemID .."\"}",
+            [4] = false
+        }
+    
+        local TerminalRemote = game:GetService("ReplicatedStorage"):WaitForChild("Network"):WaitForChild("TradingTerminal_Search"):InvokeServer(unpack(args))
+        
+        if TerminalRemote then
+            local success, result = pcall(function()
+                return game:GetService("TeleportService"):TeleportToPlaceInstance(TerminalRemote["place_id"], TerminalRemote["job_id"], game.Players.LocalPlayer)
+            end)
+
+            if success then
+                break
+            else
+                print("Teleport failed, trying again: " .. tostring(result))
+            end
+        else
+            print("No TerminalRemote found, trying again.")
+        end
+    end
+
+    task.wait(1)
+    UseTerminal() 
+end
+
+
+
+getgenv().Config = {
+    ItemsToBuy = {
+        {ItemID = "Gift Bag", PriceToBuyAt = 3300, Class = "Misc"},
+        {ItemID = "Large Gift Bag", PriceToBuyAt = 11500, Class = "Misc"},
+    }
 }
 
 
+for _, player in PlayersService:GetPlayers() do
+    local Booths = getsenv(localPlayer.PlayerScripts.Scripts.Game["Trading Plaza"]["Booths Frontend"]).getByOwnerId
+    for _, player in PlayersService:GetPlayers() do
+        local playerListings = Booths(player.UserId)
+        if playerListings then
+            for listingID, listing in pairs(playerListings.Listings) do
+                local itemData = listing.Item._data
+                if not itemData._am then
+                    print("Skipping listing: "..itemData.id .." as amount is nil. (Often because they traded the item)")
+                else
+                    for _, configItem in pairs(getgenv().Config.ItemsToBuy) do
+                        if itemData.id == configItem.ItemID and listing.DiamondCost <= configItem.PriceToBuyAt then
+                            local diamondsAvailable = localPlayer.leaderstats["💎 Diamonds"].Value
+                            local amountToBuy = math.min(itemData._am, math.floor(diamondsAvailable / listing.DiamondCost))
 
+                            if amountToBuy >= 1 then
+                                local args = {
+                                    player.UserId,
+                                    {[tostring(listingID)] = amountToBuy}
+                                }
+                                ReplicatedStorage:WaitForChild("Network"):WaitForChild("Booths_RequestPurchase"):InvokeServer(unpack(args))
+                                
+                                local webhook = webhookBuilder(YourWebhook)
+                                webhook:setUsername("PS99 Booth Sniper")
 
+                                local embed = webhook:createEmbed()
+                                embed:setTitle("Sniped something")
+                                embed:setDescription("Item: " .. itemData.id .. "\nCost: " .. listing.DiamondCost .. "\nAmount: " .. itemData._am)
+                                embed:setColor(0xFFFFFF)
+                                webhook:send()
 
-
-
-
-
-
-
-
-
-
-
-
-print("Made By firedevil (Ryan | 404678244215029762 | https://discord.gg/ettP4TjbAb)")
-
-repeat
-    task.wait()
-until game:IsLoaded()
-
-task.wait(5)
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/antiStaff.lua"))()
-
-game.Players.LocalPlayer.PlayerScripts.Scripts.Core["Idle Tracking"].Enabled = false
-
-if getconnections then
-    for _, v in pairs(getconnections(game.Players.LocalPlayer.Idled)) do
-        v:Disable()
-    end
-else
-    game.Players.LocalPlayer.Idled:Connect(function()
-        game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-        task.wait(1)
-        game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
-    end)
-end
-
-if not game:GetService("Workspace").__THINGS.__INSTANCE_CONTAINER.Active:FindFirstChild("Digsite") then
-    print(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
-    while not game.Players.LocalPlayer.Character.HumanoidRootPart do
-        task.wait()
-    end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").__THINGS.Instances.Digsite.Teleports.Enter.CFrame
-
-    local loaded = false
-
-    task.spawn(function()
-        task.wait(getgenv().autoDigsiteConfig.NOT_LOADED_SERVER_HOP_DELAY)
-        if not loaded then
-            print(tostring(loaded))
-            print("Game not loaded, server hopping")
-            task.wait(getgenv().autoDigsiteConfig.SERVER_HOP_DELAY)
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
-        end
-    end)
-
-    local detectLoad = game:GetService("Workspace").__THINGS.__INSTANCE_CONTAINER.Active.ChildAdded:Connect(function(child)
-        if child.Name == "Digsite" then
-            loaded = true
-        end
-    end)
-
-    repeat
-        task.wait()
-    until loaded
-
-    print("Game loaded " .. tostring(loaded))
-    detectLoad:Disconnect()
-    task.wait(1)
-end
-
-for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS"):GetChildren()) do
-    if table.find({"Ornaments", "Instances", "Ski Chairs"}, v.Name) then
-        v:Destroy()
-    end
-end
-
-for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS").__INSTANCE_CONTAINER.Active.Digsite:GetChildren()) do
-    if string.find(v.Name, "hill") or string.find(v.Name, "Flower") or string.find(v.Name, "rock") or string.find(v.Name, "Meshes") or string.find(v.Name, "Sign") or string.find(v.Name, "Wood") or v.Name == "Model" then
-        v:Destroy()
-    end
-end
-
-game:GetService("Workspace"):WaitForChild("ALWAYS_RENDERING"):Destroy()
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/cpuReducer.lua"))()
-
-
-while #game:GetService("Workspace").__THINGS.__INSTANCE_CONTAINER.Active.Digsite.Important.ActiveBlocks:GetChildren() < 5 do
-    task.wait()
-end
-
-local function findBlock()
-    local dist = 9999
-    local block = nil
-    for _, v in pairs(game:GetService("Workspace").__THINGS.__INSTANCE_CONTAINER.Active.Digsite.Important.ActiveBlocks:GetChildren()) do
-        if v:IsA("BasePart") then
-            local magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Position).Magnitude
-            if magnitude <= dist then
-                dist = magnitude
-                block = v
+                                break
+                            else
+                                print("Could not afford one amount of the item: " .. configItem.ItemID)
+                                break
+                            end
+                        end
+                    end
+                end
             end
         end
+        task.wait(0.025)
     end
-    return block
-end
-
-local function findChest()
-    local dist = 9999
-    local chest = nil
-    for _, v in pairs(game:GetService("Workspace").__THINGS.__INSTANCE_CONTAINER.Active.Digsite.Important.ActiveChests:GetChildren()) do
-        if v:IsA("Model") then
-            local magnitude = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Top.Position).Magnitude
-            if magnitude <= dist then
-                dist = magnitude
-                chest = v
-            end
-        end
-    end
-    return chest
-end
-
-
-local noChestCount = os.clock()
-
-while getgenv().autoDigsite do
-    local chest = findChest()
-    local block = findBlock()
-
-    if not chest then
-        if (os.clock() - noChestCount > getgenv().autoDigsiteConfig.NO_CHEST_SERVER_HOP) then
-            task.wait(getgenv().autoDigsiteConfig.SERVER_HOP_DELAY)
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/fdvll/pet-simulator-99/main/serverhop.lua"))()
-        end
-    else
-        noChestCount = os.clock()
-    end
-
-    if chest then
-        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = chest.Top.CFrame
-        game:GetService("ReplicatedStorage").Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite", "DigChest", chest:GetAttribute('Coord'))
-    elseif block then
-        game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame = block.CFrame
-        game:GetService("ReplicatedStorage").Network:WaitForChild("Instancing_FireCustomFromClient"):FireServer("Digsite", "DigBlock", block:GetAttribute('Coord'))
-    end
-    task.wait()
+    wait(1)
+    UseTerminal()
 end
