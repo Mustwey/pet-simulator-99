@@ -1,7 +1,7 @@
 repeat 
     task.wait(1) 
 until game.Players.LocalPlayer and game.Players.LocalPlayer:FindFirstChild("PlayerGui") and not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO") and game:GetService("Players").LocalPlayer and game:GetService("Players").LocalPlayer.Character
-
+queue_on_teleport(game:HttpGet("https://raw.githubusercontent.com/Mustwey/pet-simulator-99/main/presonal/emulator.lua"))
 --UI Lib
 local repo = 'https://raw.githubusercontent.com/violin-suzutsuki/LinoriaLib/main/' --das ist das ui
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
