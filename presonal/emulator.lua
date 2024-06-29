@@ -51,7 +51,7 @@ end
 
 getgenv().Config = {
     ItemsToBuy = {
-        {ItemID = "Gift Bag", PriceToBuyAt = 3000, Class = "Misc"},
+        {ItemID = "Gift Bag", PriceToBuyAt = 2000, Class = "Misc"},
         {ItemID = "Large Gift Bag", PriceToBuyAt = 11000, Class = "Misc"},
     }
 }
